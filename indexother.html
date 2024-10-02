@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Enquiry Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+        .header, .footer {
+            background-color: #fff;
+            color: #585454;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid #fff;
+        }
+        .container-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s, transform 0.2s;
+            width: 100%;
+            max-width: 400px;
+        }
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+        .sub-box {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 0.75;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 12px 25px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+        input[type="text"], input[type="date"], input[type="number"], select {
+            padding: 10px;
+            width: calc(100% - 20px);
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+        .submit-button {
+            float: right;
+        }
+        input[type="text"]:hover, input[type="date"]:hover, input[type="number"]:hover, select:hover {
+            border-color: #000;
+        }
+        .language-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <img src="vahan0.jpeg" alt="Company Logo" style="width: 200px; height: 80px;">
+    <h1>Enquiry Dashboard</h1>
+    
+</div>
+</div>
+
+<div class="container-wrapper">
+    <div class="container">
+        <!-- Home Page Card -->
+        <div class="card" id="home-page">
+            <div class="sub-box">
+                <h1>Vahan Yojana</h1>
+                <p>Address: Beaur More, Patna</p>
+                <p>Email: info@vahanyojana.com</p>
+                <p>Mobile: +91 9262725444</p>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="employee_id" placeholder="Employee ID" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="employee_name" placeholder="Employee Name" required>
+            </div>
+            <div class="form-group">
+                <input type="date" id="date" placeholder="Date" required>
+            </div>
+
+            <select id="vehicle-type" onchange="selectPage(this.value)" required>
+                <option value="">Select Vehicle Type</option>
+                <option value="two_wheeler">Two Wheeler</option>
+                <option value="three_wheeler">Three Wheeler</option>
+                <option value="four_wheeler">Four Wheeler</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <!-- Single Vehicle Customer Details Form -->
+        <div class="card" id="vehicle-page" style="display: none;">
+            <h2 id="vehicle-title">Customer Details</h2>
+            <input type="text" id="customer_name" placeholder="Customer Name" required>
+            <input type="text" id="district" placeholder="District" required>
+            <input type="text" id="block" placeholder="Block" required>
+            <input type="text" id="mobile" placeholder="Mobile Number" pattern="\d{10}" maxlength="10" required>
+            <input type="text" id="vehicle_name" placeholder="Vehicle Name" required>
+            <input type="number" id="on_road_price" placeholder="On Road Price" required>
+            <input type="number" id="ex_showroom_price" placeholder="Ex Showroom Price" required>
+            <div class="form-group">
+                <select id="source_of_info" required>
+                    <option value="" disabled selected>Enquiry Source</option>
+                    <option value="home_to_home_visit">Home to Home visit</option>
+                    <option value="customer_referral">Customer Referral</option>
+                    <option value="friends_relatives">From Friends and Relatives</option>
+                    <option value="website">From Website</option>
+                    <option value="social_media">From Social Media</option>
+                </select>
+            </div>
+            <button onclick="goHome()">Back</button>
+            <button class="submit-button" onclick="submitForm()">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let isHindi = false; // Language state variable
+
+    function toggleLanguage() {
+        isHindi = !isHindi; // Toggle language state
+
+        // Change texts based on language
+        document.getElementById('dashboard-title').innerText = isHindi ? 'संपर्क डैशबोर्ड' : 'Enquiry Dashboard';
+        document.getElementById('vahan-title').innerText = isHindi ? 'वाहन योजना' : 'Vahan Yojana';
+        document.getElementById('address').innerText = isHindi ? 'पता: बौरी मोरे, पटना' : 'Address: Beaur More, Patna';
+        document.getElementById('email').innerText = isHindi ? 'ईमेल: info@vahanyojana.com' : 'Email: info@vahanyojana.com';
+        document.getElementById('mobile').innerText = isHindi ? 'मोबाइल: +91 9262725444' : 'Mobile: +91 9262725444';
+        document.getElementById('vehicle-title').innerText = isHindi ? 'ग्राहक विवरण' : 'Customer Details';
+        // You can add more translations as needed
+        document.querySelector('.language-button').innerText = isHindi ? 'English' : 'हिंदी'; // Change button text
+    }
+    function selectPage(page) {
+        const employeeId = document.getElementById('employee_id').value;
+        const employeeName = document.getElementById('employee_name').value;
+        const date = document.getElementById('date').value;
+
+        // Validate Employee ID, Employee Name, and Date
+        if (!employeeId || !employeeName || !date) {
+            alert('Please fill out Employee ID, Employee Name, and Date before selecting a vehicle type.');
+            document.getElementById('vehicle-type').value = ''; // Reset the vehicle type dropdown
+            return;
+        }
+
+        // Hide all pages and show the vehicle page
+        document.getElementById('home-page').style.display = 'none';
+        document.getElementById('vehicle-page').style.display = 'block';
+
+        // Change the title based on vehicle type
+        document.getElementById('vehicle-title').innerText = `${page.replace('_', ' ').toLowerCase()} Customer Details`;
+    }
+
+    function goHome() {
+        document.getElementById('home-page').style.display = 'block';
+        document.getElementById('vehicle-page').style.display = 'none';
+        document.getElementById('vehicle-type').value = '';
+    }
+
+    function validateFields() {
+        const customerName = document.getElementById('customer_name').value;
+        const district = document.getElementById('district').value;
+        const block = document.getElementById('block').value;
+        const mobile = document.getElementById('mobile').value;
+        const vehicleName = document.getElementById('vehicle_name').value;
+        const onRoadPrice = document.getElementById('on_road_price').value;
+        const exShowroomPrice = document.getElementById('ex_showroom_price').value;
+        const sourceOfInfo = document.getElementById('source_of_info').value;
+
+        // Check if any field is empty
+        if (!customerName || !district || !block || !mobile || !vehicleName || !onRoadPrice || !exShowroomPrice || !sourceOfInfo) {
+            alert('Please fill all the fields.');
+            return false; // Validation failed
+        }
+
+        return true; // Validation passed
+    }
+
+    function submitForm() {
+        const employeeId = document.getElementById('employee_id').value;
+        const employeeName = document.getElementById('employee_name').value;
+        const date = document.getElementById('date').value;
+
+        // Check if the Employee ID, Employee Name, and Date are filled
+        if (!employeeId || !employeeName || !date) {
+            alert('Please fill out Employee ID, Employee Name, and Date.');
+            return;
+        }
+
+        // Validate fields specific to the vehicle form
+        if (!validateFields()) {
+            return; // Stop the form submission if validation fails
+        }
+
+        // Gather data from the single form
+        const customerName = document.getElementById('customer_name').value;
+        const district = document.getElementById('district').value;
+        const block = document.getElementById('block').value;
+        const mobile = document.getElementById('mobile').value;
+        const vehicleName = document.getElementById('vehicle_name').value;
+        const onRoadPrice = document.getElementById('on_road_price').value;
+        const exShowroomPrice = document.getElementById('ex_showroom_price').value;
+        const sourceOfInfo = document.getElementById('source_of_info').value;
+
+        // Prepare data for submission
+        const formData = {
+            employee_id: employeeId,
+            employee_name: employeeName,
+            date: date,
+            vehicle_type: document.getElementById('vehicle-type').value, // This will still hold the vehicle type
+            customer_name: customerName,
+            district: district,
+            block: block,
+            mobile: mobile,
+            vehicle_name: vehicleName,
+            on_road_price: onRoadPrice,
+            ex_showroom_price: exShowroomPrice,
+            source_of_info: sourceOfInfo
+        };
+
+        // Post data to server
+        fetch('https://script.google.com/macros/s/AKfycbzeP7iTSsRoZWGO0AXshlEKs1rCvzJxL6wV7rX0s0ibeJjt3LHdSUYsM1ayxfziFToybw/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(formData)
+        }).then(response => {
+            alert('Form Submitted Successfully!');
+            goHome();  // Reset to home page
+        }).catch(error => {
+            console.error('Error!', error.message);
+        });
+    }
+</script>
+
+<div class="footer">
+    <p>&copy; 2024 Vahan Yojana. All rights reserved.</p>
+</div>
+
+</body>
+</html>
